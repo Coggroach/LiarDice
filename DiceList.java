@@ -52,7 +52,7 @@ public class DiceList
 		return ONE_NONE;
 	}
 	
-	private int getMostFrequent()
+	private int[] getFrequencyTable()
 	{
 		int[] list = new int[] {0, 0, 0, 0, 0, 0};
 		
@@ -60,7 +60,12 @@ public class DiceList
 		{
 			list[d.getValue()]++;
 		}
-		
+		return list;
+	}
+	
+	private int getMostFrequent()
+	{
+		int[] list = getFrequencyTable();	
 		int maxVal = list[0];
 		int maxFreq = 0;
 		
