@@ -78,3 +78,9 @@ function Get-LogicResults([Hashtable] $Table)
         return;
     }    
 }
+
+function Out-LogicResults([int[]] $list)
+{
+    return Get-LogicResults (Get-RollResults $list);
+}
+
