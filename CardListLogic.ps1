@@ -1,10 +1,15 @@
 function Get-RollResults([int[]] $list)
 {
     [int[]] $FreqTable = @(0, 0, 0, 0, 0, 0);
+    [int] $MaxValue = 0;
     
     for([int] $i = 0; $i -lt $list.Length; $i++)
     {
         $FreqTable[$list[$i]-1]++;
+        if($MaxValue -lt $list[$i])
+        {
+            $MaxValue = $list[$i];
+        }
     }
     
     [int] $MaxFreq = 0;
@@ -49,6 +54,7 @@ function Get-RollResults([int[]] $list)
     return [HashTable] @{
         MaxFreq = $MaxFreq;
         MaxIndex = $MaxIndex;
+        MaxValue = $MaxValue;
         MaxFreqCount = $MaxFreqCount;
         NonZeroCount = $NonZeros;
         ZeroGap = $ZeroGap;
@@ -76,7 +82,8 @@ function Get-LogicResults([Hashtable] $Table)
     {        
         [String]::concat($Table.MaxFreq, " of a Kind");
         return;
-    }    
+    }
+    [String]::concat($Table.MaxValue, " High");  #Always be 6
 }
 
 function Out-LogicResults([int[]] $list)
