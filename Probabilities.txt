@@ -1,0 +1,8 @@
+/7776
+5n			1
+Straight	10
+FullHouse	20
+4n			25
+3n			250
+2n			1250
+1n			3125
