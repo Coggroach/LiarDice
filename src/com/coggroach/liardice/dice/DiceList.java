@@ -14,14 +14,9 @@ public class DiceList extends ArrayList<IDice>
 	}
 		
 	public void rollAll()
-	{
-		Iterator<IDice> iterator = this.iterator();
-		IDice dice = null;
-		while(iterator.hasNext());
-		{
-			dice = iterator.next();
-			dice.roll();					
-		}
+	{		
+		for(int i = 0; i < this.size(); i++)		
+			this.get(i).roll();		
 	}
 	
 	public void cloneDices(IDice template, int count)
