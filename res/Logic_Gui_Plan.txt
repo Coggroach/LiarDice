@@ -1,0 +1,31 @@
+Drawing Game
+------------
+
+Current Player
+Current DiceList
+Player Editted DiceList
+Player List Score
+Buttons:
+	Roll Selected
+	Betting Options
+	Reset Player Editted DiceList to Current DiceList
+
+
+
+Game
+----
+
+Move to Next Player (GameSide)
+Player Receives DiceList (GameSide)
+Decides on Calling False (PlayerSide)
+Player Picks 1-2 Dice to ReRoll (PlayerSide) -> (GameSide)
+Player Changes DiceList to make Bet (PlayerSide)
+Player Places Bet or Folds (PlayerSide)
+Continue
+
+if Calling False
+Previous Player's Bet and Current DiceList Revealed
+if equal
+Current Player Loses Score
+else
+Previous Player Loses Score

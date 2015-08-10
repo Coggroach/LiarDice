@@ -1,7 +1,6 @@
 package com.coggroach.liardice.dice;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class DiceList extends ArrayList<IDice>
 {	
