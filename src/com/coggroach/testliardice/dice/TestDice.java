@@ -1,27 +1,35 @@
 package com.coggroach.testliardice.dice;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.coggroach.liardice.dice.Dice;
+import com.coggroach.liardice.dice.IDice;
 
 public class TestDice 
-{
-	private Dice dice;	
+{	
+	@Test
+	public void RollAndWithinRange()
+	{
+		this.AssertRollAndWithinRange(new Dice());	
+	}	
 	
 	@Test
-	public void Initialize()
+	public void FauxRollAndWithinRange()
 	{
-		this.dice = new Dice();
+		this.AssertRollAndWithinRange(new FauxDice());
+	}	
+	
+	private void AssertRollAndWithinRange(IDice dice)
+	{
+		Assert.assertFalse(dice.hasRolled());
 		
-		Assert.assertFalse(this.dice.hasRolled());
+		dice.roll();
 		
-		this.dice.roll();
-		
-		int value = this.dice.getValue();
+		int value = dice.getValue();
 		
 		boolean condition = value > 0 && value <= 6;
 		Assert.assertTrue(condition);
-		Assert.assertFalse(this.dice.hasRolled());		
-	}	
+		Assert.assertTrue(dice.hasRolled());	
+	}
 }
