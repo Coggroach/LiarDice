@@ -34,4 +34,9 @@ public class FauxDice implements IDice
 		return this.Value == 6;
 	}
 
+	@Override
+	public IDice copy() throws Exception
+	{
+		return new FauxDice(this.Value);
+	}
 }

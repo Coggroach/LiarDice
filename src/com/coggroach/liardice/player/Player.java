@@ -6,17 +6,36 @@ public class Player implements IPlayer
 {
 	private DiceList bet;
 	private String name;
+	private boolean folded;
 	
 	public Player(String name)
 	{
 		this.name = name;
-		this.bet = new DiceList();
+		this.reset();
 	}
 	
 	@Override
 	public void saveBet(DiceList list)
 	{
-		bet.clear();
 		bet.save(list);
+	}
+
+	@Override
+	public String getName()
+	{		
+		return this.name;
+	}
+
+	@Override
+	public boolean hasFolded()
+	{
+		return this.folded;
+	}
+
+	@Override
+	public void reset()
+	{
+		this.folded = false;
+		this.bet = new DiceList();		
 	}
 }

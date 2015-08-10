@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Dice implements IDice
 {
-	private int value;
+	private int value;	
 
 	public Dice()
 	{
@@ -27,5 +27,11 @@ public class Dice implements IDice
 	public boolean hasRolled()
 	{
 		return this.value != 0;
+	}
+
+	@Override
+	public IDice copy() throws CloneNotSupportedException
+	{
+		return (IDice) this.clone();
 	}
 }

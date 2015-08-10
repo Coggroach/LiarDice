@@ -24,6 +24,21 @@ public class DiceList extends ArrayList<IDice>
 		}
 	}
 	
+	public void cloneDices(IDice template, int count)
+	{
+		for(int i = 0; i < count; i++)
+		{
+			try
+			{
+				this.add(template.copy());
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public int getDiceValue(int i)
 	{
 		return this.get(i).getValue();
