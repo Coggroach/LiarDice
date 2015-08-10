@@ -1,4 +1,4 @@
-package com.coggroach.dice;
+package com.coggroach.liardice.dice;
 
 public class Player
 {

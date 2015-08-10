@@ -1,4 +1,6 @@
-package com.coggroach.dice;
+package com.coggroach.liardice.dice;
+
+import java.util.Random;
 
 public class Dice
 {

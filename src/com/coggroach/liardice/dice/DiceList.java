@@ -1,4 +1,9 @@
-package com.coggroach.dice;
+package com.coggroach.liardice.dice;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DiceList
 {
@@ -31,7 +36,7 @@ public class DiceList
 	
 	public void removeAll()
 	{
-		this.dice.removeAll();
+		this.dice.clear();
 	}
 	
 	public void rollAll()
@@ -64,10 +69,10 @@ public class DiceList
 	    
 	    for(int i = 0; i < list.getLength(); i++)
 	    {
-	        freqTable[list.dice[i]-1]++;
-	        if(maxValue < list.dice[i])
+	        freqTable[list.dice.get(i).getValue() - 1]++;
+	        if(maxValue < list.dice.get(i).getValue())
 	        {
-	            maxValue = list.dice[i];
+	            maxValue = list.dice.get(i).getValue();
 	        }
 	    }
 	    
@@ -115,7 +120,7 @@ public class DiceList
 	    map.put("MaxIndex", maxIndex);
 	    map.put("MaxValue", maxValue);
 	    map.put("MaxFreqCount", maxFreqCount);
-	    map.put("NonZeroCount", nonZeroCount);
+	    map.put("NonZeroCount", nonZeros);
 	    map.put("ZeroGap", zeroGap);
 		return map;
 	}
@@ -126,7 +131,7 @@ public class DiceList
 			return FLUSH;
 		if(table.get("NonZeroCount") == 2 && table.get("MaxFreq") == 3)
 			return FULLHOUSE;
-		if(table.get("MaxFreq") == 2 && table.get("MaxFreqCount"))
+		if(table.get("MaxFreq") == 2 && table.get("MaxFreqCount") > 1)
 			return DOUBLE_PAIR;
 		if(table.get("MaxFreq") >= 2)
 		{
