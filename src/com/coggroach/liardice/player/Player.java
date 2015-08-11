@@ -3,11 +3,13 @@ package com.coggroach.liardice.player;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.coggroach.liardice.dice.DiceBet;
 import com.coggroach.liardice.dice.DiceList;
+import com.coggroach.liardice.dice.IBet;
 
 public class Player implements IPlayer
 {
-	private DiceList bet;
+	private IBet bet;
 	private String name;
 	private boolean folded;
 	private int id;
@@ -24,7 +26,7 @@ public class Player implements IPlayer
 	}
 	
 	@Override
-	public void update(DiceList list)
+	public void updateBet(DiceList list)
 	{
 		bet.save(list);
 	}
@@ -45,7 +47,7 @@ public class Player implements IPlayer
 	public void reset()
 	{
 		this.folded = false;
-		this.bet = new DiceList();
+		this.bet = new DiceBet();
 		this.diceToReRoll = new ArrayList<Integer>();
 		this.declaredFalse = false;		
 	}
@@ -69,7 +71,7 @@ public class Player implements IPlayer
 	}
 
 	@Override
-	public boolean isDeclaringFalse()
+	public boolean isDeclaring()
 	{
 		return this.declaredFalse;
 	}
@@ -81,7 +83,7 @@ public class Player implements IPlayer
 	}
 
 	@Override
-	public DiceList getBet()
+	public IBet getBet()
 	{
 		return this.bet;
 	}

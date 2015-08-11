@@ -22,9 +22,9 @@ public enum DiceLogic
 		this.probability = i;
 	}
 	
-	public int getProbability()
+	public float getProbability()
 	{
-		return this.probability;
+		return this.probability/Denominator.probability;
 	}
 	
 	private static Map<String, Integer> getRollResults(DiceList list)

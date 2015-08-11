@@ -3,25 +3,21 @@ package com.coggroach.testliardice.player;
 import java.util.List;
 
 import com.coggroach.liardice.dice.DiceList;
+import com.coggroach.liardice.dice.IBet;
 import com.coggroach.liardice.player.IPlayer;
+import com.coggroach.testliardice.dice.FauxBet;
 
 public class FauxPlayer implements IPlayer
 {	
 	private int id;
-	public DiceList DiceList;
+	public IBet bet;
 	
 	public FauxPlayer(int i)
 	{
 		this.id = i;
-		this.DiceList = new DiceList();
+		this.bet = new FauxBet();
 	}
 	
-	@Override
-	public void update(DiceList list)
-	{
-		this.DiceList.save(list);
-	}
-
 	@Override
 	public String getName()
 	{
@@ -37,7 +33,7 @@ public class FauxPlayer implements IPlayer
 	@Override
 	public void reset()
 	{	
-		this.DiceList.clear();
+		this.bet = null;
 	}
 
 	@Override
@@ -59,7 +55,7 @@ public class FauxPlayer implements IPlayer
 	}
 
 	@Override
-	public boolean isDeclaringFalse()
+	public boolean isDeclaring()
 	{	
 		return false;
 	}
@@ -71,9 +67,9 @@ public class FauxPlayer implements IPlayer
 	}
 
 	@Override
-	public DiceList getBet()
+	public IBet getBet()
 	{
-		return null;
+		return this.bet;
 	}
 
 	@Override
@@ -85,6 +81,13 @@ public class FauxPlayer implements IPlayer
 	@Override
 	public void addScore(int i)
 	{
+		
+	}
+
+	@Override
+	public void updateBet(DiceList list)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 }

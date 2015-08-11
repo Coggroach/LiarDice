@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.coggroach.liardice.Game;
-import com.coggroach.liardice.GameStatus;
 import com.coggroach.liardice.dice.DiceList;
 import com.coggroach.liardice.dice.IDice;
+import com.coggroach.liardice.game.Game;
+import com.coggroach.liardice.game.GameStatus;
 import com.coggroach.liardice.player.IPlayer;
 import com.coggroach.liardice.player.Player;
+import com.coggroach.liardice.player.PlayerEvent;
 
 public class GameMain
 {
@@ -23,45 +24,56 @@ public class GameMain
 		game.addPlayer(new Player("Player3", 2));
 		PrintGame(game);
 		
-		while(game.getGameStatus() != GameStatus.Stopped)
+		game.init();
+		
+		while(game.getGameStatus() != GameStatus.Ending)
 		{
-			try
+			try 
 			{
-				game.updateCurrentPlayer();
+				IPlayer player = game.getCurrentPlayer();
+				PlayerEvent event = new PlayerEvent(player);				
+				
+				if(game.getGameStatus() == GameStatus.Waiting)
+				{
+					PrintPlayer(player);
+					PrintDiceList(game.getDiceList());
+					
+					//Declare
+					System.out.println("Declaring: ");					
+					String declare = scanner.nextLine();
+					player.updateDeclare(Boolean.parseBoolean(declare));
+					game.onPlayerDeclare(event);					
+					game.update();	
+					if(game.getGameStatus() == GameStatus.Stopping)
+						break;
+					
+					
+					//Roll
+					System.out.println("Reroll: ");
+					String roll = scanner.nextLine();
+					String[] input = roll.replace(" ", "").split(",");
+					List<Integer> list = new ArrayList<Integer>();
+					
+					for(int i = 0; i < input.length; i++)
+						if(!input[i].isEmpty())
+							list.add(Integer.parseInt(input[i]));
+					
+					player.updateRoll(list);
+					game.onPlayerRoll(event);
+					game.update();
+					
+					//Bet
+					//String bet = scanner.nextLine();					
+					game.onPlayerBet(event);
+					game.update();
+				}
+				game.update();	
 			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
+			catch (Exception ex) {
+				ex.printStackTrace();
 			}
 			
-			IPlayer player = game.getCurrentPlayer();
-			PrintPlayer(player);
-			
-			DiceList dice = game.getDiceList();
-			PrintDiceList(dice);
-			
-			System.out.println("Declared Cheat!");
-			
-			player.updateDeclare(scanner.nextBoolean());			
-			game.updateGameStatus();
-			
-			System.out.println("Pick Dice to Reroll");
-			
-			String line = scanner.nextLine();			
-			System.out.println(line);
-			
-			String[] input = line.replace(" ", "").split(",");
-			List<Integer> list = new ArrayList<Integer>();
-			
-			for(int i = 0; i < input.length; i++)
-				if(!input[i].isEmpty())
-					list.add(Integer.parseInt(input[i]));
-			
-			player.updateRoll(list);
-			
-			game.updateDiceList();
-			PrintDiceList(dice);			
-		}	
+		}
 	}
 	
 	private static void PrintGame(Game game)

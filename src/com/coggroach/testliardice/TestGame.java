@@ -3,7 +3,7 @@ package com.coggroach.testliardice;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.coggroach.liardice.Game;
+import com.coggroach.liardice.game.Game;
 
 public class TestGame
 {
