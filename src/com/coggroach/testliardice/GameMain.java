@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.coggroach.liardice.dice.DiceList;
 import com.coggroach.liardice.dice.IDice;
+import com.coggroach.liardice.faux.FauxDice;
 import com.coggroach.liardice.game.Game;
 import com.coggroach.liardice.game.GameStatus;
 import com.coggroach.liardice.player.IPlayer;
@@ -63,7 +64,14 @@ public class GameMain
 					game.update();
 					
 					//Bet
-					//String bet = scanner.nextLine();					
+					String bet = scanner.nextLine();
+					String[] dice = bet.trim().split(" ");
+					DiceList betList = new DiceList();
+					for(int i = 0; i < dice.length; i++)
+						if(!dice[i].isEmpty())
+							betList.add(new FauxDice( Integer.parseInt(dice[i]) ));
+					
+					player.updateBet(betList);					
 					game.onPlayerBet(event);
 					game.update();
 				}

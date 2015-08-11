@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.coggroach.liardice.dice.Dice;
 import com.coggroach.liardice.dice.IDice;
+import com.coggroach.liardice.faux.FauxDice;
 
 public class TestDice 
 {	
@@ -17,7 +18,7 @@ public class TestDice
 	@Test
 	public void FauxRollAndWithinRange()
 	{
-		this.AssertRollAndWithinRange(new FauxDice());
+		this.AssertRollAndWithinRange(new FauxDice(3));
 	}	
 	
 	private void AssertRollAndWithinRange(IDice dice)

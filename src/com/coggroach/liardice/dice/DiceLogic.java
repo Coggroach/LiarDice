@@ -56,7 +56,9 @@ public enum DiceLogic
 	    int maxFreqCount = 0;
 	    int nonZeros = 0;
 	    boolean isNonZero = false;
-	    int zeroGap = 0;   
+	    int zeroGap = 0;
+	    int modeIndex = 0;
+	    int modeFreqIndex = 0;
 	    
 	    for(int i = 0; i < freqTable.length; i++)
 	    {
@@ -73,7 +75,12 @@ public enum DiceLogic
 	        {
 	            nonZeros++;
 	            isNonZero = true;
-	        }        
+	        }
+	        if(freqTable[i] >= modeFreqIndex) //This Returns Highest Valued Mode
+	        {
+	        	modeFreqIndex = freqTable[i];
+	        	modeIndex = i + 1;
+	        }
 	    }
 	    
 	    if(freqTable[5] == 0)
@@ -87,6 +94,7 @@ public enum DiceLogic
 	    map.put("MaxFreqCount", maxFreqCount);
 	    map.put("NonZeroCount", nonZeros);
 	    map.put("ZeroGap", zeroGap);
+	    map.put("Mode", modeIndex);
 		return map;
 	}
 	
@@ -115,8 +123,35 @@ public enum DiceLogic
 		return High;
 	}
 	
+	private static int getLogicValue(Map<String, Integer> table, DiceLogic logic)
+	{
+		switch(logic)
+		{		
+			case High:
+			case Flush:
+				return table.get("MaxValue");			
+			case Pair:
+			case Triple:
+			case FullHouse:
+			case DoublePair:
+			case Quadriple:
+			case Quintuple:
+				return table.get("Mode");
+			default:
+				return 0;			
+		}
+	}
+	
 	public static DiceLogic getLogicResult(DiceList list)
 	{
 		return getLogicResult(getRollResults(list));
+	}
+	
+	public static DiceBet getDiceBet(DiceList list)
+	{
+		Map<String, Integer> table = getRollResults(list);
+		DiceLogic logic = getLogicResult(table);
+				
+		return new DiceBet(logic, getLogicValue(table, logic));
 	}
 }

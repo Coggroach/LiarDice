@@ -1,11 +1,10 @@
-package com.coggroach.testliardice.player;
+package com.coggroach.liardice.faux;
 
 import java.util.List;
 
 import com.coggroach.liardice.dice.DiceList;
 import com.coggroach.liardice.dice.IBet;
 import com.coggroach.liardice.player.IPlayer;
-import com.coggroach.testliardice.dice.FauxBet;
 
 public class FauxPlayer implements IPlayer
 {	

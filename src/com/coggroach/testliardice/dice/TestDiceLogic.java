@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.coggroach.liardice.dice.DiceList;
 import com.coggroach.liardice.dice.DiceLogic;
+import com.coggroach.liardice.faux.FauxDice;
 
 public class TestDiceLogic
 {

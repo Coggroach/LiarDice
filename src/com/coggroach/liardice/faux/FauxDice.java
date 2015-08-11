@@ -1,16 +1,11 @@
-package com.coggroach.testliardice.dice;
+package com.coggroach.liardice.faux;
 
 import com.coggroach.liardice.dice.IDice;
 
 public class FauxDice implements IDice
 {
 	public int Value;
-	
-	public FauxDice()
-	{
-		this.Value = 0;
-	}
-	
+		
 	public FauxDice(int i)
 	{
 		this.Value = i;
