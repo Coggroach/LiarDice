@@ -226,6 +226,7 @@ public class Game implements PlayerListener, IGameStatus
 	{
 		if(!this.currentPlayer.isDeclaring() || this.round <= 1) 
 		{
+			this.currentPlayer.updateDeclare(false);
 			this.onWait();
 			return;		
 		}
