@@ -7,7 +7,6 @@ import java.util.Random;
 
 import com.coggroach.liardice.dice.DiceBet;
 import com.coggroach.liardice.dice.DiceList;
-import com.coggroach.liardice.dice.DiceLogic;
 import com.coggroach.liardice.dice.IBet;
 import com.coggroach.liardice.player.IPlayer;
 import com.coggroach.liardice.player.PlayerEvent;
@@ -17,6 +16,7 @@ public class Game implements PlayerEvent, IGameStatus
 {
 	private List<IPlayer> players;
 	private IPlayer currentPlayer;
+	private IBet tableBet;
 	private Random rand;
 	private GameStatus status;
 	private int round;
@@ -25,7 +25,8 @@ public class Game implements PlayerEvent, IGameStatus
 	{
 		this.players = new ArrayList<IPlayer>();		
 		this.rand = new Random();
-		this.currentPlayer = null;		
+		this.currentPlayer = null;
+		this.tableBet = null;
 		this.status = GameStatus.Starting;
 	}
 	
@@ -94,6 +95,14 @@ public class Game implements PlayerEvent, IGameStatus
 			index = 0;
 		
 		return this.players.get(index);
+	}
+	
+	public boolean validateBet(IBet bet)
+	{
+		if(this.tableBet == null)
+			return true;
+		
+		return bet.compareTo(this.tableBet) > 0;
 	}
 	
 	public int getRound()
@@ -184,7 +193,7 @@ public class Game implements PlayerEvent, IGameStatus
 		if(sender instanceof IPlayer)
 			if( ((IPlayer) sender).getId() == this.currentPlayer.getId())
 			{
-				this.currentPlayer.updateBet(DiceLogic.getDiceBet(o.getDiceList() ));
+				this.currentPlayer.updateBet(o.getBet());
 				this.status = GameStatus.Betting;			
 			}
 	}
@@ -212,13 +221,12 @@ public class Game implements PlayerEvent, IGameStatus
 			return;		
 		}
 		
-		IPlayer lastPlayer = this.getLastPlayer();
+		IPlayer lastPlayer = this.getLastPlayer();		
 		
-		IBet last = lastPlayer.getBet();
 		IBet curr = new DiceBet(); 
 		curr.save(this.currentPlayer.getDiceList());
 		
-		if(last == curr)
+		if(this.tableBet.compareTo(curr) >= 0)
 		{
 			this.currentPlayer.addScore(-2);
 			lastPlayer.addScore(1);
@@ -245,6 +253,7 @@ public class Game implements PlayerEvent, IGameStatus
 	@Override
 	public void onBet() throws Exception
 	{
+		this.tableBet = this.currentPlayer.getBet();
 		this.status = GameStatus.Stopping;	
 	}
 

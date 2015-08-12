@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.coggroach.liardice.dice.DiceBet;
 import com.coggroach.liardice.dice.DiceList;
-import com.coggroach.liardice.dice.DiceListHelper;
+import com.coggroach.liardice.dice.DiceHelper;
 import com.coggroach.liardice.dice.IBet;
 
 public class Player implements IPlayer
@@ -24,7 +24,7 @@ public class Player implements IPlayer
 		this.id = id;
 		this.score = 0;
 		this.dice = new DiceList();
-		this.dice.addAll(DiceListHelper.getInstance().getStandardDiceList());
+		this.dice.addAll(DiceHelper.getInstance().getStandardDiceList());
 		this.reset();
 	}
 

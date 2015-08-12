@@ -58,8 +58,14 @@ public class GameMain
 					game.update();
 					PrintDiceList(player.getDiceList());
 					
-					//Bet					
-					event.setDiceList(ParseBetList());					
+					//Bet		
+					IBet bet = ParseBetList();
+					while(!game.validateBet(bet))
+					{
+						System.err.println("Bid not High Enough.");
+						bet = ParseBetList();
+					}
+					event.setBet(bet);					
 					game.onPlayerBet(player, event);
 					game.update();
 				}
@@ -99,7 +105,7 @@ public class GameMain
 		return list;
 	}
 	
-	private static DiceList ParseBetList()
+	private static IBet ParseBetList()
 	{
 		System.out.print("Bet: ");
 		String bet = scanner.nextLine();
@@ -108,7 +114,7 @@ public class GameMain
 		for(int i = 0; i < dice.length; i++)
 			if(!dice[i].isEmpty())
 				betList.add(new FauxDice( Integer.parseInt(dice[i]) ));
-		return betList;
+		return DiceLogic.getDiceBet(betList);
 	}
 	
 	private static void PrintGame(Game game)

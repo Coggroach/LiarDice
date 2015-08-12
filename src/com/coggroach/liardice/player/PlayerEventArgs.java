@@ -2,29 +2,36 @@ package com.coggroach.liardice.player;
 
 import java.util.List;
 
-import com.coggroach.liardice.dice.DiceList;
+import com.coggroach.liardice.dice.IBet;
 
-public class PlayerEventArgs
+public class PlayerEventArgs 
 {
-	private DiceList diceList;
+	private IBet bet;
 	private IPlayer declared;
 	private List<Integer> rerolls;
 	
 	public PlayerEventArgs()
 	{
-		this.diceList = null;
+		this.bet = null;
 		this.declared = null;
 		this.rerolls = null;
 	}
-
-	public DiceList getDiceList()
+	
+	public PlayerEventArgs(IBet bet, IPlayer player, List<Integer> list)
 	{
-		return diceList;
+		this.bet = bet;
+		this.declared = player;
+		this.rerolls = list;
 	}
 
-	public void setDiceList(DiceList diceList)
+	public IBet getBet()
 	{
-		this.diceList = diceList;
+		return bet;
+	}
+
+	public void setBet(IBet bet)
+	{
+		this.bet = bet;
 	}
 
 	public IPlayer isDeclared()
