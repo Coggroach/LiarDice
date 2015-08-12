@@ -1,0 +1,28 @@
+Plane on y = 0 w/ Texture of background.
+
+CoP = Centre of Plane;
+n = Number of Players;
+
+boxModel = Model of Box;
+
+boxModel foreach Player in n;
+
+boxModel faces CoP;
+
+Out Radius r
+
+Camera @ Current Player's boxModel
+
+boxModel -> Open/Close Lid Animation;
+
+Rotate Camera, currentPlayer++
+
+f(x, r) = P(rCos(x*2Pi/n), rSin(x*2Pi/n)) + Pf
+where Pf == Vector.Zero
+
+Camera at Radius r + c;
+
+LookAt boxModel.Position;
+
+Dice @ 5 * n;
+Dice[0 * i -> 4 * i] @ boxModel[i]
