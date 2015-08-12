@@ -24,7 +24,7 @@ public enum DiceLogic
 	
 	public float getProbability()
 	{
-		return this.probability/Denominator.probability;
+		return this.probability;
 	}
 	
 	private static Map<String, Integer> getRollResults(DiceList list)

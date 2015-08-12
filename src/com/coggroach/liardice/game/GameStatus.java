@@ -4,7 +4,6 @@ public enum GameStatus
 {
 	Starting,	
 	Moving,
-	Sending,
 	Declaring,
 	Rolling,
 	Betting,

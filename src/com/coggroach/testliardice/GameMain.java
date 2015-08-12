@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.coggroach.liardice.dice.DiceList;
+import com.coggroach.liardice.dice.DiceLogic;
+import com.coggroach.liardice.dice.IBet;
 import com.coggroach.liardice.dice.IDice;
 import com.coggroach.liardice.faux.FauxDice;
 import com.coggroach.liardice.game.Game;
 import com.coggroach.liardice.game.GameStatus;
 import com.coggroach.liardice.player.IPlayer;
 import com.coggroach.liardice.player.Player;
-import com.coggroach.liardice.player.PlayerEvent;
+import com.coggroach.liardice.player.PlayerEventArgs;
 
 public class GameMain
 {
@@ -27,61 +29,86 @@ public class GameMain
 		
 		game.init();
 		
+		PlayerEventArgs event = new PlayerEventArgs();
+		
+		
 		while(game.getGameStatus() != GameStatus.Ending)
 		{
 			try 
 			{
-				IPlayer player = game.getCurrentPlayer();
-				PlayerEvent event = new PlayerEvent(player);				
+				IPlayer player = game.getCurrentPlayer();								
 				
 				if(game.getGameStatus() == GameStatus.Waiting)
 				{
 					PrintPlayer(player);
-					PrintDiceList(game.getDiceList());
+					PrintDiceList(player.getDiceList());
 					
-					//Declare
-					System.out.println("Declaring: ");					
-					String declare = scanner.nextLine();
-					player.updateDeclare(Boolean.parseBoolean(declare));
-					game.onPlayerDeclare(event);					
-					game.update();	
-					if(game.getGameStatus() == GameStatus.Stopping)
-						break;
-					
-					
-					//Roll
-					System.out.println("Reroll: ");
-					String roll = scanner.nextLine();
-					String[] input = roll.replace(" ", "").split(",");
-					List<Integer> list = new ArrayList<Integer>();
-					
-					for(int i = 0; i < input.length; i++)
-						if(!input[i].isEmpty())
-							list.add(Integer.parseInt(input[i]));
-					
-					player.updateRoll(list);
-					game.onPlayerRoll(event);
+					//Declare	
+					if(game.getRound() >= 1)
+					{
+						event.setDeclared(ParseDeclared(game));
+						game.onPlayerDeclare(player, event);					
+						game.update();	
+						if(game.getGameStatus() == GameStatus.Stopping)
+							break;				
+					}
+					//Roll					
+					event.setRoll(ParseRollList());										
+					game.onPlayerRoll(player, event);
 					game.update();
+					PrintDiceList(player.getDiceList());
 					
-					//Bet
-					String bet = scanner.nextLine();
-					String[] dice = bet.trim().split(" ");
-					DiceList betList = new DiceList();
-					for(int i = 0; i < dice.length; i++)
-						if(!dice[i].isEmpty())
-							betList.add(new FauxDice( Integer.parseInt(dice[i]) ));
-					
-					player.updateBet(betList);					
-					game.onPlayerBet(event);
+					//Bet					
+					event.setDiceList(ParseBetList());					
+					game.onPlayerBet(player, event);
 					game.update();
 				}
-				game.update();	
+				game.update();				
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
 			
 		}
+	}
+	
+	private static IPlayer ParseDeclared(Game game) throws Exception
+	{
+		System.out.print("Declare: ");
+		int id = Integer.parseInt(scanner.nextLine());
+		try {
+			return game.getPlayerFromId(id);
+		}
+		catch(Exception ex)
+		{
+			System.err.println(ex.getMessage());
+			return null;	
+		}
+	}
+	
+	private static List<Integer> ParseRollList()
+	{
+		System.out.print("Reroll: ");
+		String roll = scanner.nextLine();
+		String[] input = roll.replace(" ", "").split(",");
+		List<Integer> list = new ArrayList<Integer>();
+		
+		for(int i = 0; i < input.length; i++)
+			if(!input[i].isEmpty())
+				list.add(Integer.parseInt(input[i]));
+		return list;
+	}
+	
+	private static DiceList ParseBetList()
+	{
+		System.out.print("Bet: ");
+		String bet = scanner.nextLine();
+		String[] dice = bet.trim().split(" ");
+		DiceList betList = new DiceList();
+		for(int i = 0; i < dice.length; i++)
+			if(!dice[i].isEmpty())
+				betList.add(new FauxDice( Integer.parseInt(dice[i]) ));
+		return betList;
 	}
 	
 	private static void PrintGame(Game game)
@@ -91,8 +118,8 @@ public class GameMain
 	
 	private static void PrintPlayer(IPlayer player)
 	{
-		System.out.println(player.getName());
-		System.out.println(player.getScore());
+		System.out.print(player.getName());
+		System.out.println(":" + player.getScore());
 	}
 	
 	private static void PrintDiceList(DiceList list)
@@ -102,5 +129,7 @@ public class GameMain
 			System.out.print(i.getValue() + " ");
 		}
 		System.out.println();
+		IBet bet = DiceLogic.getDiceBet(list);
+		System.out.println(bet.getDiceLogic().toString() + " (" +  bet.getValue() + ")");
 	}
 }

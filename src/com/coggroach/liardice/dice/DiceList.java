@@ -5,6 +5,16 @@ import java.util.ArrayList;
 public class DiceList extends ArrayList<IDice>
 {	
 	private static final long serialVersionUID = 1L;
+	
+	public DiceList()
+	{
+		super();
+	}
+
+	public DiceList(DiceList standardDiceList)
+	{		
+		super(standardDiceList);
+	}
 
 	public void save(DiceList list)
 	{

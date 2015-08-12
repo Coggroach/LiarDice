@@ -22,13 +22,7 @@ public class FauxPlayer implements IPlayer
 	{
 		return "FauxPlayer" + this.id;
 	}
-
-	@Override
-	public boolean hasFolded()
-	{
-		return false;
-	}
-
+	
 	@Override
 	public void reset()
 	{	
@@ -54,18 +48,6 @@ public class FauxPlayer implements IPlayer
 	}
 
 	@Override
-	public boolean isDeclaring()
-	{	
-		return false;
-	}
-
-	@Override
-	public void updateDeclare(boolean b)
-	{
-		
-	}
-
-	@Override
 	public IBet getBet()
 	{
 		return this.bet;
@@ -84,7 +66,35 @@ public class FauxPlayer implements IPlayer
 	}
 
 	@Override
-	public void updateBet(DiceList list)
+	public void updateBet(IBet bet)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateDiceList(DiceList list)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public DiceList getDiceList()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IPlayer isDeclaring()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateDeclare(IPlayer b)
 	{
 		// TODO Auto-generated method stub
 		

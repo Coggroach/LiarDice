@@ -7,17 +7,15 @@ import java.util.Random;
 
 import com.coggroach.liardice.dice.DiceBet;
 import com.coggroach.liardice.dice.DiceList;
-import com.coggroach.liardice.dice.DiceListHelper;
 import com.coggroach.liardice.dice.DiceLogic;
 import com.coggroach.liardice.dice.IBet;
 import com.coggroach.liardice.player.IPlayer;
 import com.coggroach.liardice.player.PlayerEvent;
-import com.coggroach.liardice.player.PlayerListener;
+import com.coggroach.liardice.player.PlayerEventArgs;
 
-public class Game implements PlayerListener, IGameStatus
+public class Game implements PlayerEvent, IGameStatus
 {
 	private List<IPlayer> players;
-	private DiceList gameDiceList;
 	private IPlayer currentPlayer;
 	private Random rand;
 	private GameStatus status;
@@ -25,10 +23,9 @@ public class Game implements PlayerListener, IGameStatus
 	
 	public Game()
 	{
-		this.players = new ArrayList<IPlayer>();
-		this.gameDiceList = DiceListHelper.getInstance().getStandardDiceList();
+		this.players = new ArrayList<IPlayer>();		
 		this.rand = new Random();
-		this.currentPlayer = null;
+		this.currentPlayer = null;		
 		this.status = GameStatus.Starting;
 	}
 	
@@ -39,10 +36,11 @@ public class Game implements PlayerListener, IGameStatus
 	
 	public void init()
 	{
-		this.currentPlayer = this.getFirstPlayer();
-		this.gameDiceList.rollAll();
-		this.status = GameStatus.Sending;
+		this.currentPlayer = this.getFirstPlayer();		
+		this.status = GameStatus.Starting;
 		this.round = 0;
+		for(IPlayer player : this.players)
+			player.reset();
 	}	
 	
 	public IPlayer getPlayerFromId(int id) throws Exception
@@ -67,11 +65,6 @@ public class Game implements PlayerListener, IGameStatus
 	{
 		return this.players;
 	}
-
-	public DiceList getDiceList()
-	{
-		return this.gameDiceList;
-	}
 	
 	public IPlayer getCurrentPlayer()
 	{
@@ -84,29 +77,32 @@ public class Game implements PlayerListener, IGameStatus
 	}
 
 	private IPlayer getNextPlayer() throws Exception
-	{		
+	{	
+		if(this.currentPlayer == null)
+			throw new Exception("Game not Initialized.");
+		if(this.players.size() <= 0)
+			throw new Exception("Game has no Registered Players.");
+		
+		return this.getNextPlayer(this.currentPlayer);
+	}
+	
+	private IPlayer getNextPlayer(IPlayer currentPlayer)
+	{
 		int index = this.players.indexOf(this.currentPlayer) + 1;
 		
 		if(index >= this.players.size())
 			index = 0;
 		
-		IPlayer player = this.players.get(index);
-		if(!player.hasFolded())
-			return player;
-		else if(this.foldedCount() == this.players.size())
-			throw new Exception("All Players have Folded");
-		else
-		{
-			this.currentPlayer = player;
-			return this.getNextPlayer();
-		}		
+		return this.players.get(index);
 	}
 	
+	public int getRound()
+	{
+		return round;
+	}
+
 	private IPlayer getLastPlayer() throws Exception
 	{
-		if(this.foldedCount() >= this.players.size() - 1)
-			throw new Exception("All Players have Folded");
-		
 		return this.getLastPlayer(this.currentPlayer);
 	}
 	
@@ -115,29 +111,11 @@ public class Game implements PlayerListener, IGameStatus
 		int index = this.players.indexOf(this.currentPlayer) - 1;		
 		
 		if(index < 0)
-			index = this.players.size() - 1;
+			index = this.players.size() - 1;	
 		
-		IPlayer player = this.players.get(index);
-		if(!player.hasFolded())
-			return player;
-		else
-			return this.getLastPlayer(player);
+		return this.players.get(index);
 	}
-	
-	private int foldedCount()
-	{
-		Iterator<IPlayer> iterator = this.players.iterator();
-		int i = 0;
-		while(iterator.hasNext())
-		{
-			if(iterator.next().hasFolded())
-				i++;
-		}		
-		return i;
-	}
-	
-
-	
+			
 	public void update() throws Exception
 	{
 		switch(this.status)
@@ -166,9 +144,6 @@ public class Game implements PlayerListener, IGameStatus
 			case Stopping:
 				this.onStop();
 				break;
-			case Sending:
-				this.onSend();
-				break;
 			case Waiting:
 				this.onWait();
 				break;
@@ -180,25 +155,38 @@ public class Game implements PlayerListener, IGameStatus
 
 
 	@Override
-	public void onPlayerDeclare(PlayerEvent o)
+	public void onPlayerDeclare(Object sender, PlayerEventArgs o)
 	{
-		if(o.getPlayerId() == this.currentPlayer.getId())		
-			if(this.currentPlayer.isDeclaring())
-				this.status = GameStatus.Declaring;		
+		if(sender instanceof IPlayer)
+			if( ((IPlayer) sender).getId() == this.currentPlayer.getId())
+			{								
+				this.currentPlayer.updateDeclare(o.isDeclared());
+				if(this.currentPlayer.isDeclaring() != null)
+					this.status = GameStatus.Declaring;
+			}
+					
 	}
 
 	@Override
-	public void onPlayerRoll(PlayerEvent o)
+	public void onPlayerRoll(Object sender, PlayerEventArgs o)
 	{		
-		if(o.getPlayerId() == this.currentPlayer.getId())				
-			this.status = GameStatus.Rolling;	
+		if(sender instanceof IPlayer)
+			if( ((IPlayer) sender).getId() == this.currentPlayer.getId())
+			{
+				this.currentPlayer.updateRoll(o.getRoll());
+				this.status = GameStatus.Rolling;
+			}				
 	}
 
 	@Override
-	public void onPlayerBet(PlayerEvent o)
+	public void onPlayerBet(Object sender, PlayerEventArgs o)
 	{
-		if(o.getPlayerId() == this.currentPlayer.getId())				
-			this.status = GameStatus.Betting;		
+		if(sender instanceof IPlayer)
+			if( ((IPlayer) sender).getId() == this.currentPlayer.getId())
+			{
+				this.currentPlayer.updateBet(DiceLogic.getDiceBet(o.getDiceList() ));
+				this.status = GameStatus.Betting;			
+			}
 	}
 
 	@Override
@@ -211,22 +199,15 @@ public class Game implements PlayerListener, IGameStatus
 	public void onMove() throws Exception
 	{
 		this.currentPlayer = this.getNextPlayer();		
-		this.status = GameStatus.Sending;		
-	}
-
-	@Override
-	public void onSend() throws Exception
-	{
-		this.currentPlayer.updateBet(this.gameDiceList);
-		this.onWait();
+		this.onWait();	
 	}
 
 	@Override
 	public void onDeclare() throws Exception
 	{
-		if(!this.currentPlayer.isDeclaring() || this.round <= 1) 
+		if(this.currentPlayer.isDeclaring() == null || this.round <= 1) 
 		{
-			this.currentPlayer.updateDeclare(false);
+			this.currentPlayer.updateDeclare(null);
 			this.onWait();
 			return;		
 		}
@@ -235,7 +216,7 @@ public class Game implements PlayerListener, IGameStatus
 		
 		IBet last = lastPlayer.getBet();
 		IBet curr = new DiceBet(); 
-		curr.save(this.gameDiceList);
+		curr.save(this.currentPlayer.getDiceList());
 		
 		if(last == curr)
 		{
@@ -253,9 +234,10 @@ public class Game implements PlayerListener, IGameStatus
 	@Override
 	public void onRoll() throws Exception
 	{
+		DiceList dice = this.currentPlayer.getDiceList();
 		for(int i : this.currentPlayer.getRoll())
 		{
-			this.gameDiceList.roll(i);
+			dice.roll(i);
 		}		
 		this.onWait();
 	}

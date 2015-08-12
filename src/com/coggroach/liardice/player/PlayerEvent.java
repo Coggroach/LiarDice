@@ -1,18 +1,8 @@
 package com.coggroach.liardice.player;
 
-import java.util.EventObject;
-
-public class PlayerEvent extends EventObject
+public interface PlayerEvent
 {
-	private static final long serialVersionUID = 1L;
-
-	public PlayerEvent(IPlayer source)
-	{
-		super(source);		
-	}
-	
-	public int getPlayerId()
-	{
-		return ((IPlayer)this.source).getId();
-	}
+	public void onPlayerDeclare(Object sender, PlayerEventArgs o);
+	public void onPlayerRoll(Object sender, PlayerEventArgs o);
+	public void onPlayerBet(Object sender, PlayerEventArgs o);	
 }

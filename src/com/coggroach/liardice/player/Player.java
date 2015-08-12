@@ -5,16 +5,17 @@ import java.util.List;
 
 import com.coggroach.liardice.dice.DiceBet;
 import com.coggroach.liardice.dice.DiceList;
+import com.coggroach.liardice.dice.DiceListHelper;
 import com.coggroach.liardice.dice.IBet;
 
 public class Player implements IPlayer
 {
 	private IBet bet;
+	private DiceList dice;
 	private String name;
-	private boolean folded;
 	private int id;
 	private List<Integer> diceToReRoll;
-	private boolean declaredFalse;
+	private IPlayer declaredFalse;
 	private int score;
 	
 	public Player(String name, int id)
@@ -22,13 +23,9 @@ public class Player implements IPlayer
 		this.name = name;
 		this.id = id;
 		this.score = 0;
+		this.dice = new DiceList();
+		this.dice.addAll(DiceListHelper.getInstance().getStandardDiceList());
 		this.reset();
-	}
-	
-	@Override
-	public void updateBet(DiceList list)
-	{
-		bet.save(list);
 	}
 
 	@Override
@@ -38,18 +35,12 @@ public class Player implements IPlayer
 	}
 
 	@Override
-	public boolean hasFolded()
-	{
-		return this.folded;
-	}
-
-	@Override
 	public void reset()
 	{
-		this.folded = false;
 		this.bet = new DiceBet();
 		this.diceToReRoll = new ArrayList<Integer>();
-		this.declaredFalse = false;		
+		this.declaredFalse = null;
+		this.dice.rollAll();
 	}
 
 	@Override
@@ -71,13 +62,13 @@ public class Player implements IPlayer
 	}
 
 	@Override
-	public boolean isDeclaring()
+	public IPlayer isDeclaring()
 	{
 		return this.declaredFalse;
 	}
 
 	@Override
-	public void updateDeclare(boolean b)
+	public void updateDeclare(IPlayer b)
 	{
 		this.declaredFalse = b;
 	}
@@ -98,5 +89,23 @@ public class Player implements IPlayer
 	public void addScore(int i)
 	{
 		this.score += i;
+	}
+
+	@Override
+	public void updateBet(IBet bet)
+	{
+		this.bet = bet;
+	}
+
+	@Override
+	public void updateDiceList(DiceList list)
+	{
+		this.dice = list;
+	}
+
+	@Override
+	public DiceList getDiceList()
+	{
+		return this.dice;
 	}
 }

@@ -11,12 +11,14 @@ public interface IPlayer
 	public IBet getBet();
 	public int getId();
 	public String getName();
+	public DiceList getDiceList();
 	public List<Integer> getRoll();
 	public int getScore();
-	public boolean hasFolded();
-	public boolean isDeclaring();
+	//public boolean hasFolded();
+	public IPlayer isDeclaring();
 	public void reset();
-	public void updateBet(DiceList list);
-	public void updateDeclare(boolean b);
+	public void updateBet(IBet bet);
+	public void updateDiceList(DiceList list);
+	public void updateDeclare(IPlayer b);
 	public void updateRoll(List<Integer> list);
 }

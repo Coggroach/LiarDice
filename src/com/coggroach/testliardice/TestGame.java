@@ -12,6 +12,8 @@ public class TestGame
 	{
 		Game game = new Game();
 		Assert.assertNotNull(game);
+		
+		
 	}
 	
 	

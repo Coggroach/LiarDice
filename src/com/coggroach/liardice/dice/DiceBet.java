@@ -21,7 +21,9 @@ public class DiceBet implements IBet
 	@Override
 	public void save(DiceList list)
 	{
-		this.bet = DiceLogic.getLogicResult(list);
+		IBet bet = DiceLogic.getDiceBet(list);
+		this.bet = bet.getDiceLogic();
+		this.value = bet.getValue();
 	}
 
 	@Override
@@ -34,5 +36,17 @@ public class DiceBet implements IBet
 	public int getValue()
 	{
 		return this.value;
+	}
+
+	@Override
+	public int compareTo(IBet o)
+	{
+		float oProb = o.getDiceLogic().getProbability();
+		float tProb = this.bet.getProbability();
+		
+		if(Math.abs(oProb - tProb) <= 0.000001)		
+			return value - o.getValue();		
+		
+		return (int) (-tProb + oProb);
 	}
 }

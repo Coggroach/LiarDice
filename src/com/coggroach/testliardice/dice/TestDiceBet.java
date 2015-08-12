@@ -132,5 +132,25 @@ public class TestDiceBet
 		Assert.assertTrue(bet.getDiceLogic() == DiceLogic.High);	
 		Assert.assertTrue(bet.getValue() == 6);
 	}
+	
+	@Test
+	public void compareTo()
+	{
+		DiceList a = new DiceList();
+		DiceList b = new DiceList();
+		
+		for(int i = 0; i < 5; i++)
+		{			
+			a.add(new FauxDice(5)); //Quintuple (5)
+			b.add(new FauxDice(i+1)); //Flush (5)
+		}
+		IBet aBet = DiceLogic.getDiceBet(a);
+		IBet bBet = DiceLogic.getDiceBet(b);
+		
+		Assert.assertTrue(aBet.compareTo(bBet) > 0);
+		Assert.assertTrue(bBet.compareTo(aBet) < 0);
+		Assert.assertTrue(aBet.compareTo(aBet) == 0);
+		Assert.assertTrue(bBet.compareTo(bBet) == 0);
+	}
 
 }

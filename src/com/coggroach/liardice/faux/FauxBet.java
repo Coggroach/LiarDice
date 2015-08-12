@@ -26,4 +26,11 @@ public class FauxBet implements IBet
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public int compareTo(IBet o)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

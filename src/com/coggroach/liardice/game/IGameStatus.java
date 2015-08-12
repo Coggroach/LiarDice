@@ -4,7 +4,6 @@ public interface IGameStatus
 {
 	void onStart() throws Exception;
 	void onMove() throws Exception;
-	void onSend() throws Exception;
 	void onDeclare() throws Exception;
 	void onRoll() throws Exception;
 	void onBet() throws Exception;

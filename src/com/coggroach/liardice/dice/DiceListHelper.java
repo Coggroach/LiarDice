@@ -15,23 +15,17 @@ public class DiceListHelper
 	}
 	
 	
-	private DiceList list;
-	
 	public DiceListHelper()
 	{
-		this.list = new DiceList();
-		this.init();
+
 	}
-	
-	private void init()	
-	{
-		for(int i = 0; i < 5; i++)
-			this.list.add(new Dice());
-		this.list.rollAll();
-	}
-	
+		
 	public DiceList getStandardDiceList()
 	{
-		return this.list;
+		DiceList list = new DiceList();
+		for(int i = 0; i < 5; i++)
+			list.add(new Dice());
+		list.rollAll();
+		return list;
 	}
 }
