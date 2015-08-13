@@ -29,3 +29,24 @@ if equal
 Current Player Loses Score
 else
 Previous Player Loses Score
+
+
+Another Game
+------------
+
+X Players
+5 Die Per Player
+
+Random Player Rolls 1 Dice.
+Result = Roll Number.
+
+RollAll.
+
+Each Player Bet on Number of Results in all Rolls.
+E.g. "I bet there are six 1s" (They have four 1s rolled)
+I.e Two other people have rolled a 1
+
+All Losers Lose a Dice.
+Repeat
+
+Winner has Most Die left in the end.

@@ -42,6 +42,7 @@ public class Game implements PlayerEvent, IGameStatus
 		this.round = 0;
 		for(IPlayer player : this.players)
 			player.reset();
+		this.tableBet = null;
 	}	
 	
 	public IPlayer getPlayerFromId(int id) throws Exception
@@ -236,7 +237,7 @@ public class Game implements PlayerEvent, IGameStatus
 			lastPlayer.addScore(-2);
 			this.currentPlayer.addScore(1);
 		}
-		this.status = GameStatus.Stopping;	
+		this.status = GameStatus.Restarting;	
 	}
 
 	@Override

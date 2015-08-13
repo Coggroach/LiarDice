@@ -49,8 +49,8 @@ public class GameMain
 						event.setDeclared(ParseDeclared(game));
 						game.onPlayerDeclare(player, event);					
 						game.update();	
-						if(game.getGameStatus() == GameStatus.Stopping)
-							break;				
+						if(game.getGameStatus() == GameStatus.Restarting)
+							continue;				
 					}
 					//Roll					
 					event.setRoll(ParseRollList());										
